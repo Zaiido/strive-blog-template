@@ -45,7 +45,6 @@ const Blog = (props) => {
 
   useEffect(() => {
     const { id } = params;
-    console.log(id)
     getBlog(id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -53,7 +52,6 @@ const Blog = (props) => {
 
   useEffect(() => {
     if (blog) {
-      console.log(blog)
       setLoading(false);
     }
   }, [blog])
