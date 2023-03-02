@@ -16,7 +16,72 @@ const NewBlogPost = (props) => {
   }, [editorState]);
 
   const [title, setTitle] = useState("")
-  const [category, setCategory] = useState("Category1")
+  const [category, setCategory] = useState("Technology")
+  const [coverFile, setCoverFile] = useState("")
+  const [time, setTime] = useState(1)
+  const [timeUnit, setTimeUnit] = useState("minute")
+  const [authorName, setAuthorName] = useState("")
+  const [authorSurname, setAuthorSurname] = useState("")
+  const [authorAvatar, setAuthorAvatar] = useState("")
+
+  const [blogPost, setBlogPost] = useState(null)
+
+
+  const getAuthor = async () => {
+    try {
+      let response = await fetch("http://localhost:3001/authors")
+      if (response.ok) {
+        let authors = await response.json()
+        let author = authors.find(author => author.name.toLowerCase() === authorName.toLowerCase() && author.surname.toLowerCase() === authorSurname.toLowerCase())
+        console.log(author)
+        if (author) {
+          console.log(author.avatar)
+          setAuthorAvatar(author.avatar)
+        } else {
+          setAuthorAvatar(`https://ui-avatars.com/api/?name=${authorName}+${authorSurname}`)
+        }
+      } else {
+        console.log("error")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  const handleCoverUpload = async (id) => {
+    try {
+      const formData = new FormData()
+      formData.append("cover", coverFile)
+      let response = await fetch(`http://localhost:3001/blogPosts/${id}/uploadCover`, {
+        method: "POST",
+        body: formData
+      })
+      if (response.ok) {
+        console.log("Yey!")
+      } else {
+        console.log("Try again!")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (coverFile) {
+      handleCoverUpload(blogPost._id)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blogPost])
+
+  useEffect(() => {
+    if (authorAvatar) {
+      sendPost()
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authorAvatar])
+
 
   const sendPost = async () => {
     try {
@@ -26,12 +91,12 @@ const NewBlogPost = (props) => {
         "title": title,
         "cover": "https://picsum.photos/800/400",
         "readTime": {
-          "value": 2,
-          "unit": "minute"
+          "value": time,
+          "unit": timeUnit
         },
         "author": {
-          "name": "Zaide Kurti",
-          "avatar": "https://picsum.photos/800/400"
+          "name": `${authorName.toUpperCase()} ${authorSurname.toUpperCase()}`,
+          "avatar": authorAvatar
         },
         "content": html
       }
@@ -43,7 +108,9 @@ const NewBlogPost = (props) => {
         body: JSON.stringify(newPost)
       })
       if (response.ok) {
-        console.log(response)
+        let post = await response.json()
+        setBlogPost(post)
+        console.log(authorAvatar)
       }
       else {
         console.log("Error!!!")
@@ -55,9 +122,9 @@ const NewBlogPost = (props) => {
 
   return (
     <Container className="new-blog-container">
-      <Form className="mt-5" onSubmit={(e) => {
+      <Form className="mt-5" onSubmit={async (e) => {
         e.preventDefault()
-        sendPost()
+        getAuthor()
       }
       }>
         <Form.Group controlId="blog-form" className="mt-3">
@@ -67,12 +134,53 @@ const NewBlogPost = (props) => {
         <Form.Group controlId="blog-category" className="mt-3">
           <Form.Label>Category</Form.Label>
           <Form.Control size="lg" as="select" value={category} onChange={(e) => setCategory(e.target.value)}>
-            <option>Category1</option>
-            <option>Category2</option>
-            <option>Category3</option>
-            <option>Category4</option>
-            <option>Category5</option>
+            <option>Technology</option>
+            <option>History</option>
+            <option>Drama</option>
+            <option>Mistery</option>
+            <option>News</option>
           </Form.Control>
+        </Form.Group>
+        <Form.Group className="mt-3">
+          <Form.Label>Cover Image</Form.Label>
+          <Form.Control type="file"
+            onChange={(e) => {
+              const files = e.target.files
+              if (files && files.length > 0) {
+                setCoverFile(files[0]);
+              } else {
+                setCoverFile(null);
+              }
+            }} />
+        </Form.Group>
+        <Form.Group className="mt-3">
+          <Form.Label>Time to read</Form.Label>
+          <Form.Control type="number" value={time}
+            onChange={(e) => {
+              setTime(e.target.value)
+            }} />
+        </Form.Group>
+        <Form.Group className="mt-3">
+          <Form.Label>Time unit</Form.Label>
+          <Form.Control size="lg" as="select" value={timeUnit} onChange={(e) => setTimeUnit(e.target.value)}>
+            <option>minute</option>
+            <option>hour</option>
+            <option>day</option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group className="mt-3">
+          <Form.Label>Author Name</Form.Label>
+          <Form.Control type="text" value={authorName}
+            onChange={(e) => {
+              setAuthorName(e.target.value)
+            }} />
+        </Form.Group>
+        <Form.Group className="mt-3">
+          <Form.Label>Author Surname</Form.Label>
+          <Form.Control type="text" value={authorSurname}
+            onChange={(e) => {
+              setAuthorSurname(e.target.value)
+            }} />
         </Form.Group>
         <Form.Group controlId="blog-content" className="mt-3">
           <Form.Label>Blog Content</Form.Label>
