@@ -14,11 +14,45 @@ const Blog = (props) => {
   const [author, setAuthor] = useState("")
   const params = useParams();
 
+  const [commentToEdit, setCommentToEdit] = useState(null)
+  const [editedComment, setEditedComment] = useState("")
+
 
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = (id) => {
+  const handleClose = async (id) => {
+    try {
+      let response = await fetch(`http://localhost:3001/blogPosts/${blog._id}/comments/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ comment: editedComment })
+      })
+      if (response.ok) {
+        console.log(response)
+      } else {
+        console.log("Error")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    setShow(false)
+  };
+
+
+  const handleShow = async (id) => {
+    try {
+      let response = await fetch(`http://localhost:3001/blogPosts/${blog._id}/comments`)
+      if (response.ok) {
+        let comments = await response.json()
+        setCommentToEdit(comments.find(comment => comment._id === id))
+      } else {
+        console.log("Error")
+      }
+    } catch (error) {
+      console.log(error)
+    }
     setShow(true)
   };
 
@@ -205,20 +239,14 @@ const Blog = (props) => {
           <Modal.Body><Form.Control
             as="textarea"
             rows={5}
-          // value={editPost.text}
-          // onChange={(e) => {
-          //   setEditPost({
-          //     ...editPost,
-          //     text: e.target.value,
-          //   });
-          // }}
+            value={editedComment ? editedComment : (commentToEdit ? commentToEdit.comment : "")}
+            onChange={(e) => {
+              setEditedComment(e.target.value);
+            }}
           /></Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={handleClose}>
-              Save Changes
+            <Button variant="primary" onClick={() => { handleClose(commentToEdit._id) }}>
+              Submit
             </Button>
           </Modal.Footer>
         </Modal>
