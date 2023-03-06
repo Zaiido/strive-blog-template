@@ -17,7 +17,7 @@ const Blog = (props) => {
   const [commentToEdit, setCommentToEdit] = useState(null)
 
 
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
 
   const handleClose = async (id) => {
     try {
