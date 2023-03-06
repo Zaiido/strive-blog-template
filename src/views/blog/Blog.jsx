@@ -15,7 +15,6 @@ const Blog = (props) => {
   const params = useParams();
 
   const [commentToEdit, setCommentToEdit] = useState(null)
-  const [editedComment, setEditedComment] = useState("")
 
 
   const [show, setShow] = useState(false);
@@ -27,7 +26,7 @@ const Blog = (props) => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ comment: editedComment })
+        body: JSON.stringify({ comment: commentToEdit.comment })
       })
       if (response.ok) {
         console.log(response)
@@ -239,9 +238,12 @@ const Blog = (props) => {
           <Modal.Body><Form.Control
             as="textarea"
             rows={5}
-            value={editedComment ? editedComment : (commentToEdit ? commentToEdit.comment : "")}
+            value={commentToEdit ? commentToEdit.comment : ""}
             onChange={(e) => {
-              setEditedComment(e.target.value);
+              setCommentToEdit({
+                ...commentToEdit,
+                comment: e.target.value
+              });
             }}
           /></Modal.Body>
           <Modal.Footer>
