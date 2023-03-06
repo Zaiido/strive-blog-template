@@ -37,12 +37,9 @@ const BlogList = (props) => {
 
   return (
     <>
-      <Form className="mb-5" onSubmit={(e) => {
-        e.preventDefault()
-        // getPosts()
-      }}>
-        <Form.Control type="text" placeholder="Search" className="mr-sm-2" value={query} onChange={(e) => setQuery(e.target.value)} />
-      </Form>
+
+      <Form.Control type="text" placeholder="Search" className="mr-sm-2 mb-5" value={query} onChange={(e) => setQuery(e.target.value)} />
+
       <Row>
         {posts.map((post, i) => (
           <Col key={i}

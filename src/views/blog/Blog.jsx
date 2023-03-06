@@ -94,7 +94,6 @@ const Blog = (props) => {
       if (response.ok) {
         let allComments = await response.json()
         setComments(allComments)
-        console.log(allComments)
       } else {
         console.log("error")
       }
