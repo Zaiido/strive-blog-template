@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 import BlogItem from "../blog-item/BlogItem";
 
 
 const BlogList = (props) => {
 
   const [posts, setPosts] = useState([])
+  const [query, setQuery] = useState("")
 
 
   useEffect(() => {
     getPosts()
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query])
 
   const getPosts = async () => {
     try {
-      let response = await fetch("http://localhost:3001/blogPosts/")
+      let response
+      if (query) {
+        response = await fetch("http://localhost:3001/blogPosts?title=" + query)
+      } else {
+        response = await fetch("http://localhost:3001/blogPosts/")
+      }
       if (response.ok) {
         let allPosts = await response.json()
         setPosts(allPosts)
@@ -26,19 +33,29 @@ const BlogList = (props) => {
     }
   }
 
+
+
   return (
-    <Row>
-      {posts.map((post, i) => (
-        <Col key={i}
-          md={4}
-          style={{
-            marginBottom: 50,
-          }}
-        >
-          <BlogItem key={post.title} {...post} />
-        </Col>
-      ))}
-    </Row>
+    <>
+      <Form className="mb-5" onSubmit={(e) => {
+        e.preventDefault()
+        // getPosts()
+      }}>
+        <Form.Control type="text" placeholder="Search" className="mr-sm-2" value={query} onChange={(e) => setQuery(e.target.value)} />
+      </Form>
+      <Row>
+        {posts.map((post, i) => (
+          <Col key={i}
+            md={4}
+            style={{
+              marginBottom: 50,
+            }}
+          >
+            <BlogItem key={post.title} {...post} />
+          </Col>
+        ))}
+      </Row>
+    </>
   );
 };
 

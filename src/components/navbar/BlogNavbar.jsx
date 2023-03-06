@@ -1,25 +1,9 @@
-import React, { useState } from "react";
-import { Button, Container, Form, FormControl, Navbar } from "react-bootstrap";
+import React from "react";
+import { Button, Container, Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./styles.css";
 const NavBar = (props) => {
 
-  const [query, setQuery] = useState("")
-
-
-  const getPosts = async () => {
-    try {
-      let response = await fetch("http://localhost:3001/blogPosts?title=" + query)
-      if (response.ok) {
-        let posts = await response.json()
-        console.log(posts)
-      } else {
-        console.log("Error")
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   return (
     <Navbar expand="lg" className="blog-navbar" fixed="top">
@@ -27,13 +11,6 @@ const NavBar = (props) => {
         <Navbar.Brand as={Link} to="/">
           <img className="blog-navbar-brand" alt="logo" src="logo.svg" />
         </Navbar.Brand>
-        <Form onSubmit={(e) => {
-          e.preventDefault()
-          getPosts()
-        }}>
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" value={query} onChange={(e) => setQuery(e.target.value)} />
-        </Form>
-
         <Button
           as={Link}
           to="/new"
