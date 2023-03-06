@@ -29,7 +29,7 @@ const NewBlogPost = (props) => {
 
   const getAuthor = async () => {
     try {
-      let response = await fetch("http://localhost:3001/authors")
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/authors`)
       if (response.ok) {
         let authors = await response.json()
         let author = authors.find(author => author.name.toLowerCase() === authorName.toLowerCase() && author.surname.toLowerCase() === authorSurname.toLowerCase())
@@ -53,7 +53,7 @@ const NewBlogPost = (props) => {
     try {
       const formData = new FormData()
       formData.append("cover", coverFile)
-      let response = await fetch(`http://localhost:3001/blogPosts/${id}/uploadCover`, {
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts/${id}/uploadCover`, {
         method: "POST",
         body: formData
       })
@@ -100,7 +100,7 @@ const NewBlogPost = (props) => {
         },
         "content": html
       }
-      let response = await fetch("http://localhost:3001/blogPosts/", {
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

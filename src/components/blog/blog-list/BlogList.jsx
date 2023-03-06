@@ -16,13 +16,14 @@ const BlogList = (props) => {
 
   const getPosts = async () => {
     try {
-      let response
+      let response;
       if (query) {
-        response = await fetch("http://localhost:3001/blogPosts?title=" + query)
+        response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts?title=` + query)
       } else {
-        response = await fetch("http://localhost:3001/blogPosts/")
+        response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts`)
       }
       if (response.ok) {
+        console.log(response)
         let allPosts = await response.json()
         setPosts(allPosts)
       } else {

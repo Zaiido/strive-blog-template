@@ -21,7 +21,7 @@ const Blog = (props) => {
 
   const handleClose = async (id) => {
     try {
-      let response = await fetch(`http://localhost:3001/blogPosts/${blog._id}/comments/${id}`, {
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts/${blog._id}/comments/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -42,7 +42,7 @@ const Blog = (props) => {
 
   const handleShow = async (id) => {
     try {
-      let response = await fetch(`http://localhost:3001/blogPosts/${blog._id}/comments`)
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts/${blog._id}/comments`)
       if (response.ok) {
         let comments = await response.json()
         setCommentToEdit(comments.find(comment => comment._id === id))
@@ -60,7 +60,7 @@ const Blog = (props) => {
     try {
       const formData = new FormData()
       formData.append("cover", file)
-      let response = await fetch(`http://localhost:3001/blogPosts/${id}/uploadCover`, {
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts/${id}/uploadCover`, {
         method: "POST",
         body: formData
       })
@@ -76,7 +76,7 @@ const Blog = (props) => {
 
   const getBlog = async (id) => {
     try {
-      let response = await fetch("http://localhost:3001/blogPosts/" + id)
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts/${id}`)
       if (response.ok) {
         let actualPost = await response.json()
         setBlog(actualPost)
@@ -90,7 +90,7 @@ const Blog = (props) => {
 
   const getBlogComments = async (id) => {
     try {
-      let response = await fetch(`http://localhost:3001/blogPosts/${id}/comments`)
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts/${id}/comments`)
       if (response.ok) {
         let allComments = await response.json()
         setComments(allComments)
@@ -104,7 +104,7 @@ const Blog = (props) => {
 
   const handleSubmit = async (id) => {
     try {
-      let response = await fetch(`http://localhost:3001/blogPosts/${id}/comments`, {
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts/${id}/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -128,7 +128,7 @@ const Blog = (props) => {
 
   const handleDelete = async (postId, commentId) => {
     try {
-      await fetch(`http://localhost:3001/blogPosts/${postId}/comments/${commentId}`, {
+      await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts/${postId}/comments/${commentId}`, {
         method: "DELETE"
       })
     } catch (error) {
