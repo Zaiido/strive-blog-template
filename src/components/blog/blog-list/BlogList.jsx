@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
-import BlogItem from "../blog-item/BlogItem";
+import BlogItem from "../blog-item/BlogItem"
 
 
 const BlogList = (props) => {
