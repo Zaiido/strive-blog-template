@@ -7,6 +7,7 @@ const BlogList = (props) => {
 
   const [posts, setPosts] = useState([])
   const [query, setQuery] = useState("")
+  const token = localStorage.getItem('token');
 
 
   useEffect(() => {
@@ -18,12 +19,21 @@ const BlogList = (props) => {
     try {
       let response;
       if (query) {
-        response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts?title=` + query)
+        response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts?title=` + query,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
       } else {
-        response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts`)
+        response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
       }
       if (response.ok) {
-        console.log(response)
         let allPosts = await response.json()
         setPosts(allPosts.blogs)
       } else {

@@ -20,6 +20,9 @@ const Blog = (props) => {
 
   const [show, setShow] = useState(false);
 
+  const token = localStorage.getItem('token');
+
+
   const handleClose = async (id) => {
     try {
       let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts/${blog._id}/comments/${id}`, {
@@ -77,7 +80,11 @@ const Blog = (props) => {
 
   const getBlog = async (id) => {
     try {
-      let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts/${id}`)
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       if (response.ok) {
         let actualPost = await response.json()
         setBlog(actualPost)
@@ -185,7 +192,7 @@ const Blog = (props) => {
 
             <div className="blog-details-container">
               <div className="blog-details-author">
-                <BlogAuthor {...blog.author} />
+                <BlogAuthor {...blog.authors[0]} />
               </div>
               <div className="blog-details-info">
                 <div>{format(parseISO(blog.createdAt.toString()), 'dd MMM yyyy')}</div>

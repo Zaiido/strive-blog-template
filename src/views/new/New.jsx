@@ -26,14 +26,20 @@ const NewBlogPost = (props) => {
 
   const [blogPost, setBlogPost] = useState(null)
 
+  const token = localStorage.getItem('token');
+
 
   const getAuthor = async () => {
     try {
-      let response = await fetch(`${process.env.REACT_APP_BE_URL}/authors`)
+      let response = await fetch(`${process.env.REACT_APP_BE_URL}/authors`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
       if (response.ok) {
         let authors = await response.json()
         let author = authors.find(author => author.name.toLowerCase() === authorName.toLowerCase() && author.surname.toLowerCase() === authorSurname.toLowerCase())
-        console.log(author)
         if (author) {
           console.log(author.avatar)
           setAuthorAvatar(author.avatar)
@@ -103,7 +109,10 @@ const NewBlogPost = (props) => {
       let response = await fetch(`${process.env.REACT_APP_BE_URL}/blogPosts`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+
+          Authorization: `Bearer ${token}`
+
         },
         body: JSON.stringify(newPost)
       })
