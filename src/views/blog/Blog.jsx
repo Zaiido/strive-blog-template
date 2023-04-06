@@ -2,7 +2,7 @@ import { format, parseISO } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { Button, Container, Form, Image, ListGroup, Modal } from "react-bootstrap";
 import { Download } from "react-bootstrap-icons";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import BlogAuthor from "../../components/blog/blog-author/BlogAuthor";
 import BlogLike from "../../components/likes/BlogLike";
 import "./styles.css";
@@ -20,7 +20,8 @@ const Blog = (props) => {
 
   const [show, setShow] = useState(false);
 
-  const token = localStorage.getItem('token');
+  const [searchParams] = useSearchParams()
+  const token = searchParams.get("accessToken")
 
 
   const handleClose = async (id) => {
@@ -149,8 +150,11 @@ const Blog = (props) => {
     const { id } = params;
     getBlog(id)
     getBlogComments(id)
+    if (searchParams.get("accessToken")) {
+      localStorage.setItem("token", searchParams.get("accessToken"))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams]);
 
 
   useEffect(() => {
