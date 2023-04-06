@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import BlogItem from "../blog-item/BlogItem"
+import { useSearchParams } from "react-router-dom";
 
 
 const BlogList = (props) => {
 
   const [posts, setPosts] = useState([])
   const [query, setQuery] = useState("")
-  const token = localStorage.getItem('token');
-
+  const [searchParams] = useSearchParams()
+  const token = searchParams.get("accessToken")
 
   useEffect(() => {
     getPosts()
+    if (searchParams.get("accessToken")) {
+      localStorage.setItem("token", searchParams.get("accessToken"))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query])
+  }, [query, searchParams])
 
   const getPosts = async () => {
     try {

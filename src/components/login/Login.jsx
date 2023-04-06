@@ -48,9 +48,15 @@ const Login = () => {
                     <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </Form.Group>
 
-                <Button className="mt-3" variant="primary" type="submit" onClick={handleSubmit}>
+                <Button className="mt-3 mr-3" variant="primary" type="submit" onClick={handleSubmit}>
                     Login
                 </Button>
+                <a href="http://localhost:3001/authors/auth/google">
+                    <Button className="mt-3 mx-3" variant="light">
+                        <img style={{ width: "30px" }} src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png" alt="Icon" />
+                        Login with Google
+                    </Button>
+                </a>
                 <Link style={{ display: "block", textDecoration: "none", fontSize: "14px" }} className="mt-2" to={"/register"}>Click here to register!</Link>
             </Form>
         </Container>
